@@ -18,7 +18,7 @@ public class Campaign {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_id")
-    private LoyaltyProgram loyaltyProgram;
+    private LoyaltyProgram program;
     @Column(nullable = false)
     private String name;
     @Enumerated(EnumType.STRING)
