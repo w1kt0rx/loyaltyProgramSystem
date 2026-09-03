@@ -1,11 +1,14 @@
 package com.example.loyaltyprogram.service;
 
+import com.example.loyaltyprogram.dto.PageDto;
 import com.example.loyaltyprogram.dto.request.CreateUserRequest;
+import com.example.loyaltyprogram.dto.request.PageRequestDto;
 import com.example.loyaltyprogram.dto.request.UpdateUserRequest;
 import com.example.loyaltyprogram.dto.response.BalanceResponse;
 import com.example.loyaltyprogram.dto.response.UserResponse;
 import com.example.loyaltyprogram.exception.*;
 import com.example.loyaltyprogram.mapper.MembershipMapper;
+import com.example.loyaltyprogram.mapper.PageRequestMapper;
 import com.example.loyaltyprogram.mapper.UserMapper;
 import com.example.loyaltyprogram.model.LoyaltyProgram;
 import com.example.loyaltyprogram.model.Membership;
@@ -16,6 +19,8 @@ import com.example.loyaltyprogram.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final MembershipMapper membershipMapper;
+    private final PageRequestMapper pageRequestMapper;
     private final LoyaltyProgramRepository programRepository;
     private final MembershipRepository membershipRepository;
 
@@ -58,6 +64,26 @@ public class UserService {
         } catch (DataIntegrityViolationException ex) {
             throw new ConflictException("EMAIL_ALREADY_EXISTS", "Email already in use: " + request.email());
         }
+    }
+
+    @Transactional(readOnly = true)
+    public PageDto<UserResponse> searchUsers(
+            String email,
+            String lastName,
+            PageRequestDto pageRequest
+    ) {
+        Pageable pageable = pageRequestMapper.toPageable(pageRequest);
+
+        Page<UserResponse> page =
+                userRepository
+                        .findByEmailContainingIgnoreCaseAndLastNameContainingIgnoreCase(
+                                email == null ? "" : email,
+                                lastName == null ? "" : lastName,
+                                pageable
+                        )
+                        .map(userMapper::toResponse);
+
+        return PageDto.from(page);
     }
 
     @Transactional(readOnly = true)

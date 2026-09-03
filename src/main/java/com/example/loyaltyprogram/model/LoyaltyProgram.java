@@ -1,5 +1,6 @@
 package com.example.loyaltyprogram.model;
 
+import com.example.loyaltyprogram.dto.request.UpdateProgramRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,6 +58,12 @@ public class LoyaltyProgram {
 
     public boolean isActiveAt(LocalDateTime moment) {
         return period.isActiveAt(moment);
+    }
+
+    public LoyaltyProgram update(UpdateProgramRequest request) {
+        this.name = request.name();
+        this.description = request.description();
+        return this;
     }
 
     @Override

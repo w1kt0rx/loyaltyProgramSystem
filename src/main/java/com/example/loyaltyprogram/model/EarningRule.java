@@ -1,5 +1,6 @@
 package com.example.loyaltyprogram.model;
 
+import com.example.loyaltyprogram.dto.request.UpdateEarningRuleRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,12 @@ public class EarningRule {
     @Embedded
     private Period period;
 
+    public EarningRule update(UpdateEarningRuleRequest request) {
+        period.setStartDate(request.startDate());
+        period.setEndDate(request.endDate());
+        this.points = request.points();
+        return this;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -5,11 +5,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @Embeddable
 public class Period {
@@ -36,6 +38,14 @@ public class Period {
         boolean afterOrEqualStart = !moment.isBefore(startDate);
         boolean beforeOrEqualEnd = (endDate == null) || !moment.isAfter(endDate);
         return afterOrEqualStart && beforeOrEqualEnd;
+    }
+
+    public boolean overlaps(Period other) {
+        LocalDateTime thisEnd = this.endDate;
+        LocalDateTime otherEnd = other.endDate;
+        boolean startsBeforeOtherEnds = otherEnd == null || !this.startDate.isAfter(otherEnd);
+        boolean endsAfterOtherStarts = thisEnd == null || !thisEnd.isBefore(other.startDate);
+        return startsBeforeOtherEnds && endsAfterOtherStarts;
     }
 
     @Override
