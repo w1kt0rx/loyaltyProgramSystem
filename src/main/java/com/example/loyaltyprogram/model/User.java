@@ -1,5 +1,6 @@
 package com.example.loyaltyprogram.model;
 
+import com.example.loyaltyprogram.dto.request.UpdateUserRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ public class User {
     private String firstName;
     @Column(name = "last_name", nullable = false)
     private String lastName;
+    @Column(nullable = false)
+    private boolean deactivated = false;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Membership> memberships = new ArrayList<>();
 
@@ -34,6 +37,16 @@ public class User {
     public void removeMembership(Membership membership) {
         memberships.remove(membership);
         membership.setUser(null);
+    }
+
+    public User update(UpdateUserRequest request) {
+        this.firstName = request.firstName();
+        this.lastName = request.lastName();
+        return this;
+    }
+
+    public void deactivate() {
+        this.deactivated = true;
     }
 
     @Override

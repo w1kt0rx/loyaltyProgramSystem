@@ -30,6 +30,11 @@ public class LoyaltyProgram {
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reward> rewards = new ArrayList<>();
 
+    public void addMembership(Membership membership) {
+        memberships.add(membership);
+        membership.setProgram(this);
+    }
+
     public void addEarningRule(EarningRule earningRule) {
         earningRules.add(earningRule);
         earningRule.setProgram(this);
