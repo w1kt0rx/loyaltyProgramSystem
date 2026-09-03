@@ -1,7 +1,9 @@
 package com.example.loyaltyprogram.exception;
 
-public class IllegalDateException extends LoyaltyProgramSystemException {
+import org.springframework.http.HttpStatus;
+
+public class IllegalDateException extends BusinessException {
     public IllegalDateException(String message) {
-        super(message);
+        super("INVALID_DATE", message, HttpStatus.CONFLICT);
     }
 }
