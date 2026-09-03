@@ -1,5 +1,6 @@
 package com.example.loyaltyprogram.model;
 
+import com.example.loyaltyprogram.dto.request.UpdateRewardRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,13 @@ public class Reward {
     private Integer availableQuantity;
     @Embedded
     private Period period;
+
+    public Reward update(UpdateRewardRequest request) {
+        this.name = request.name();
+        this.pointsCost = request.pointsCost();
+        this.availableQuantity = request.availableQuantity();
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {

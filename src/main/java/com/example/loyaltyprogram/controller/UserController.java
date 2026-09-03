@@ -1,6 +1,8 @@
 package com.example.loyaltyprogram.controller;
 
+import com.example.loyaltyprogram.dto.PageDto;
 import com.example.loyaltyprogram.dto.request.CreateUserRequest;
+import com.example.loyaltyprogram.dto.request.PageRequestDto;
 import com.example.loyaltyprogram.dto.request.UpdateUserRequest;
 import com.example.loyaltyprogram.dto.response.UserResponse;
 import com.example.loyaltyprogram.service.UserService;
@@ -18,6 +20,15 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
+    }
+
+    @GetMapping()
+    public ResponseEntity<PageDto<UserResponse>> getUsers(
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String lastName,
+            @ModelAttribute PageRequestDto pageRequest
+    ) {
+        return ResponseEntity.ok(userService.searchUsers(email, lastName, pageRequest));
     }
 
     @GetMapping("/{userId}")
