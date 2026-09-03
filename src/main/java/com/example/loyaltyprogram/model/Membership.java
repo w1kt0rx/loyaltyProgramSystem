@@ -12,7 +12,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Table(name = "membership")
 @Entity
 public class Membership {
@@ -31,6 +30,10 @@ public class Membership {
     private int pointsBalance = 0;
     @OneToMany(mappedBy = "membership", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PointsTransaction> transactions = new ArrayList<>();
+
+    public Membership() {
+        this.joinDate = LocalDate.now();
+    }
 
     public void addTransaction(PointsTransaction transaction) {
         transactions.add(transaction);
